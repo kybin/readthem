@@ -41,7 +41,7 @@ func serverMain() {
 	nodes := make([]Node, 0)
 	err = dec.Decode(&nodes)
 	if err != nil {
-		log.Fatal(err)
+		die(err)
 	}
 
 	http.HandleFunc("/node/", makeNodeHandler(nodes))
