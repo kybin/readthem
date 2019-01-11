@@ -10,7 +10,6 @@ import (
 	"net"
 	"net/http"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -50,16 +49,7 @@ func serverMain() {
 	log.Fatal(http.ListenAndServeTLS(addr, cert, key, nil))
 }
 
-var templates = template.Must(template.New("").Funcs(template.FuncMap{
-	"TextOutput": func(cmd ...string) string {
-		if len(cmd) == 0 {
-			return ""
-		}
-		c := exec.Command(cmd[0], cmd[1:]...)
-		out, _ := c.CombinedOutput()
-		return string(out)
-	},
-}).ParseGlob("tmpl/*.html"))
+var serverTemplate = template.Must(template.New("index.html").ParseFiles("tmpl/index.html"))
 
 type Node struct {
 	Name string `json:"name"`
@@ -73,7 +63,7 @@ func makeRootHandler(nodes []Node) http.HandlerFunc {
 		}{
 			Nodes: nodes,
 		}
-		err := templates.ExecuteTemplate(w, "index.html", recipt)
+		err := serverTemplate.Execute(w, recipt)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}

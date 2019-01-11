@@ -2,9 +2,11 @@ package main
 
 import (
 	"flag"
+	"html/template"
 	"log"
 	"net"
 	"os"
+	"os/exec"
 	"time"
 )
 
@@ -30,10 +32,21 @@ func nodeMain() {
 	}
 }
 
+var nodeTemplate = template.Must(template.New("node.html").Funcs(template.FuncMap{
+	"TextOutput": func(cmd ...string) string {
+		if len(cmd) == 0 {
+			return ""
+		}
+		c := exec.Command(cmd[0], cmd[1:]...)
+		out, _ := c.CombinedOutput()
+		return string(out)
+	},
+}).ParseFiles("tmpl/node.html"))
+
 func sendReadMe(conn net.Conn) {
 	conn.SetWriteDeadline(time.Now().Add(time.Second))
 	defer conn.Close()
-	err := templates.ExecuteTemplate(conn, "node.html", nil)
+	err := nodeTemplate.Execute(conn, nil)
 	if err != nil {
 		log.Print(err)
 	}
