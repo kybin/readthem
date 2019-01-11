@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"html/template"
 	"log"
@@ -44,10 +45,22 @@ var nodeTemplate = template.Must(template.New("node.html").Funcs(template.FuncMa
 }).ParseFiles("tmpl/node.html"))
 
 func sendReadMe(conn net.Conn) {
-	conn.SetWriteDeadline(time.Now().Add(time.Second))
+	conn.SetReadDeadline(time.Now().Add(time.Second))
 	defer conn.Close()
-	err := nodeTemplate.Execute(conn, nil)
+	name, err := bufio.NewReader(conn).ReadString('\n')
+	if err != nil {
+		log.Println(err)
+		return
+	}
+	conn.SetWriteDeadline(time.Now().Add(time.Second))
+	recipt := struct {
+		Name string
+	}{
+		Name: name,
+	}
+	err = nodeTemplate.Execute(conn, recipt)
 	if err != nil {
 		log.Print(err)
+		return
 	}
 }

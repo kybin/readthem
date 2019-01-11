@@ -92,6 +92,13 @@ func makeNodeHandler(nodes []Node) http.HandlerFunc {
 			return
 		}
 		defer conn.Close()
+		bw := bufio.NewWriter(conn)
+		_, err = bw.WriteString(node + "\n")
+		if err != nil {
+			log.Println(err)
+			return
+		}
+		bw.Flush()
 		_, err = bufio.NewReader(conn).WriteTo(w)
 		if err != nil {
 			log.Println(err)
