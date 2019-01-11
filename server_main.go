@@ -49,7 +49,7 @@ func serverMain() {
 	log.Fatal(http.ListenAndServeTLS(addr, cert, key, nil))
 }
 
-var serverTemplate = template.Must(template.New("index.html").ParseFiles("tmpl/index.html"))
+var serverTemplate = template.Must(template.New("server.html").ParseFiles("tmpl/server.html"))
 
 type Node struct {
 	Name string `json:"name"`
