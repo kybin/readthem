@@ -10,6 +10,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"os/exec"
 	"strings"
 )
 
@@ -49,7 +50,16 @@ func serverMain() {
 	log.Fatal(http.ListenAndServeTLS(addr, cert, key, nil))
 }
 
-var templates = template.Must(template.New("").ParseGlob("tmpl/*.html"))
+var templates = template.Must(template.New("").Funcs(template.FuncMap{
+	"TextOutput": func(cmd ...string) string {
+		if len(cmd) == 0 {
+			return ""
+		}
+		c := exec.Command(cmd[0], cmd[1:]...)
+		out, _ := c.CombinedOutput()
+		return string(out)
+	},
+}).ParseGlob("tmpl/*.html"))
 
 type Node struct {
 	Name string `json:"name"`
