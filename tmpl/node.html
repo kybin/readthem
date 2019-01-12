@@ -6,6 +6,11 @@ pre {
 	padding: 8px;
 	font-family: Liberation Mono, Droid Sans Mono, Consolas, Lucida Console, monospace;
 }
+code {
+	background-color: #CCCCCC;
+	padding: 2px;
+	font-family: Liberation Mono, Droid Sans Mono, Consolas, Lucida Console, monospace;
+}
 </style>
 </head>
 <body>
@@ -14,14 +19,14 @@ hello I am a node '{{.Name}}' running by '{{TextOutput "printenv" "USER"}}'.
 </p>
 
 <p>
-this is output from `df -H /`
+this is output from <code>df -H /</code>
 <pre>
 {{TextOutput "df" "-H" "/"}}
 </pre>
 </p>
 
 <p>
-this is output from `crontab -l`
+this is output from <code>crontab -l</code>
 <pre>
 {{TextOutput "crontab" "-l"}}
 </pre>
