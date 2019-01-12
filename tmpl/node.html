@@ -1,6 +1,9 @@
 <html>
 <head>
 <style>
+.pad-bottom {
+	margin-bottom:30px;
+}
 pre {
 	background-color: #AAAAAA;
 	padding: 8px;
@@ -14,22 +17,22 @@ code {
 </style>
 </head>
 <body>
-<p>
+<p class="pad-bottom">
 hello I am a node '{{.Name}}' running by '{{TextOutput "printenv" "USER"}}'.
 </p>
 
 <p>
 this is output from <code>df -H /</code>
-<pre>
+</p>
+<pre class="pad-bottom">
 {{TextOutput "df" "-H" "/"}}
 </pre>
-</p>
 
 <p>
 this is output from <code>crontab -l</code>
-<pre>
+</p>
+<pre class="pad-bottom">
 {{TextOutput "crontab" "-l"}}
 </pre>
-</p>
 </body>
 </html>
